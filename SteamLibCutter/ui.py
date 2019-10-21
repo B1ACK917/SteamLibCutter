@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox as msg
 from tkinter.filedialog import askopenfilename, asksaveasfilename
 from SteamLibCutter.frame_cut import *
 
@@ -107,14 +108,18 @@ def inter_h_scale_arg(v):
 
 def select_path():
     global frame, typeisgif
-    path_ = askopenfilename(filetypes=[('PNG', '*.png'), ('JPG', '*.jpg'), ('GIF', '*.gif')])
+    path_ = askopenfilename(filetypes=[('image or video', '*.gif;*.png;*.jpg;*.mp4')])
     file_type = path_[path_.find('.'):]
-    if file_type != '.gif':
+    if file_type == '.jpg' or file_type == '.png':
         frame = cv2.imread(path_)
         typeisgif = False
-    else:
+    elif file_type == '.gif':
         frame = readgif(path_)
         typeisgif = True
+    elif file_type == '.mp4':
+        msg.showerror('Alert', '不支持的文件类型')
+    else:
+        return
     new_img = pre_cut_one_frame(frame, dic['row'], dic['col'], dic['width'], dic['height'], dic['x_'], dic['y_'],
                                 dic['inter_w'], dic['inter_h'])
     cv2.imshow('image', new_img)

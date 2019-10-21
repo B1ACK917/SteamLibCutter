@@ -4,7 +4,7 @@ import imageio
 
 rectangle_list = []
 gif_frame = []
-gif_time_gap=0
+gif_time_gap = 0
 
 
 def pre_cut_one_frame(frame, row, col, width, height, x_, y_, inter_w, inter_h):
@@ -52,11 +52,13 @@ def readgif(filename):
     fps = gif.get(cv2.CAP_PROP_FPS)
     gif_time_gap = 1.0 / fps
     res, img = gif.read()
-    gif_frame.append(img)
     frame = img
+    img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
+    gif_frame.append(img)
     while 1:
         res, img = gif.read()
         if res:
+            img = cv2.cvtColor(img, cv2.COLOR_RGB2BGR)
             gif_frame.append(img)
         else:
             break
@@ -82,8 +84,10 @@ def cut_gif(width, height, row, col):
 def write_dyn(filename, container, row, col):
     it = filename.find('.')
     path_bg = filename[:it]
-    path_ed = filename[it:]
+    # path_ed = filename[it:]
+    path_ed = '.png'
     for i in range(row):
         for j in range(col):
             gif_container = container[i * col + j]
-            imageio.mimsave(path_bg + '_' + str(i) + '_' + str(j) + path_ed, gif_container, 'GIF', duration=gif_time_gap)
+            imageio.mimsave(path_bg + '_' + str(i) + '_' + str(j) + path_ed, gif_container, 'GIF',
+                            duration=gif_time_gap)
